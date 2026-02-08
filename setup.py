@@ -22,7 +22,7 @@ def get_version():
 
 
 try:
-    long_description = open(rel_path('README.rst'), 'rt').read()
+    long_description = open(rel_path('README.md'), 'rt').read()
 except IOError:
     long_description = ''
 
@@ -33,6 +33,7 @@ setup(
 
     description='Tools for writing latex papers',
     long_description=long_description,
+    long_description_content_type='text/markdown',
 
     author='Jonathan Sick',
     author_email='jonathansick@mac.com',

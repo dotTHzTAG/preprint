@@ -1,6 +1,4 @@
-########
 # preprint
-########
 
 > [!NOTE]
 > **Community Fork** - This is a fork of the original [jonathansick /
