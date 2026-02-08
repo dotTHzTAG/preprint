@@ -1,13 +1,28 @@
 ########
-preprint
+# preprint
 ########
 
-*Tools for preparing astrophysics papers.* Preprint lets you automatically compile, typeset document differences and package the manuscript for publication.
+> [!NOTE]
+> **Community Fork** - This is a fork of the original [jonathansick /
+preprint](https://github.com/jonathansick/preprint) package, which appears to have been discontinued in 2015. Thank you jonathansick for the original work!
 
-Installation requires `cliff <https://cliff.readthedocs.org/en/latest/>`_, the `watchdog <https://pypi.python.org/pypi/watchdog>`_ package, the `GitPython >=0.3 <https://pypi.python.org/pypi/GitPython/0.3.2.RC1>`_ package, and a recent version of setuptools.
-Preprint also works well with `latexmk <http://users.phys.psu.edu/~collins/software/latexmk-jcc/>`_ for compiling latex, and `vc <http://www.ctan.org/pkg/vc>`_ for adding version control meta data to compiled documents.
+##Tools for preparing scientific manuscripts in LaTeX.
 
-To install from PyPI::
+Preprint lets you automatically compile, typeset document differences, and package the manuscript for publication.
+
+Installation requires 
+
+* `cliff` <https://cliff.readthedocs.org/en/latest/>, the 
+* `watchdog` <https://pypi.python.org/pypi/watchdog> package, the 
+* `GitPython >=0.3` <https://pypi.python.org/pypi/GitPython/0.3.2.RC1> package, and a recent version of 
+* `setuptools`.
+
+Preprint also works well with 
+
+* `latexmk` <http://users.phys.psu.edu/~collins/software/latexmk-jcc/> for compiling LaTeX, and 
+* `vc` <http://www.ctan.org/pkg/vc> for adding version control metadata to compiled documents.
+
+To install from PyPI:
 
     pip install preprint
 
@@ -25,14 +40,14 @@ Preprint currently supports the following commands (see below for a reference):
 - ``preprint pack`` to package the document for journals or the arXiv.
 - ``preprint init`` to setup your project with ``preprint.json`` configurations.
 
-Check the `GitHub Issues <https://github.com/jonathansick/preprint/issues>`_ to submit additional ideas.
+Check the `GitHub Issues <https://github.com/jonathansick/preprint/issues>` to submit additional ideas.
 
 ===================
 A taste of preprint
 ===================
 
 Preprint is pretty easy to use.
-Here's a few commands to give a flavour of what it can do::
+Here are a few commands to give a flavour of what it can do:
 
     preprint init  # this is all the setup you need
     preprint make  # compiles the doc according to your compile command
@@ -46,21 +61,28 @@ Configuration System / preprint.json
 
 ``preprint`` configurations are determined from (in order of increasing precedence): internal defaults, a project-specific JSON file, and command line arguments.
 
-To create a ``preprint.json`` configuration file for your project, from your paper's directory simply run::
+To create a ``preprint.json`` configuration file for your project, from your paper's directory simply run:
 
     preprint init
 
-It will automatically find the root latex file for your paper.
-You can open ``preprint.json`` to take a look at its format and modify the configurations further.
-Here is an example of its format::
+It will automatically find the root LaTeX file for your paper.
+You can open ``preprint.json`` to review its format and further modify the configurations.
+Here is an example of its format:
 
-    { 
-        "master": "paper.tex",
-        "exts": ["tex", "pdf", "eps"],
-        "cmd": "latexmk -f -pdf -bibtex-cond {master}"
-    }
+```
+{
+    "cmd": "latexmk -f -pdf -bibtex-cond {master}",
+    "exts": [
+        "tex",
+        "pdf",
+        "eps",
+        "png"
+    ],
+    "master": "article.tex"
+}
+```
 
-If set in ``preprint.json``, any command line setting of the same name does not need to repeated.
+If set in ``preprint.json``, any command line setting of the same name does not need to be repeated.
 
 List of Configurations
 ----------------------
