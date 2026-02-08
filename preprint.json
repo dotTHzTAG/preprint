@@ -1,0 +1,9 @@
+{
+    "cmd": "latexmk -f -pdf -bibtex-cond {master}",
+    "exts": [
+        "tex",
+        "pdf",
+        "eps"
+    ],
+    "master": "article.tex"
+}

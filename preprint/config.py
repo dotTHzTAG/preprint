@@ -78,9 +78,9 @@ class Configurations(object):
 
 if __name__ == '__main__':
     conf = Configurations()
-    print conf.default("master")
-    print conf.default("exts")
-    print conf.default("cmd")
-    print conf.config("exts")
-    print type(conf.config("exts"))
-    print conf.config("cmd")
+    print(conf.default("master"))
+    print(conf.default("exts"))
+    print(conf.default("cmd"))
+    print(conf.config("exts"))
+    print(type(conf.config("exts")))
+    print(conf.config("cmd"))

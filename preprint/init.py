@@ -5,7 +5,7 @@ import os
 import json
 
 from cliff.command import Command
-from paperweight.texutils import find_root_tex_document, RootNotFound
+from .texutils import find_root_tex_document, RootNotFound
 
 from preprint.config import Configurations
 

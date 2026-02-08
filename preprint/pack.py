@@ -11,7 +11,7 @@ import codecs
 import re
 import subprocess
 
-from paperweight.texutils import inline, remove_comments, inline_bbl
+from .texutils import inline, remove_comments, inline_bbl, _find_exts
 
 from cliff.command import Command
 
@@ -34,7 +34,7 @@ class Package(Command):
         parser.add_argument(
             '--exts',
             nargs='*',
-            default=self.app.confs.config('exts'),
+            default=self.app.confs.config('exts') + ['png'],
             help="Figure extensions to use in order of priority")
         parser.add_argument(
             '--jpeg',
@@ -118,9 +118,7 @@ def discover_figures(tex, ext_priority):
         as the key and and values are dicts with keys: path, options and
         figure environment.
     """
-    figs_pattern = re.compile(
-        ur"\\includegraphics(.*?){(.*?)}",
-        re.UNICODE)
+    figs_pattern = re.compile(r"\\includegraphics(.*?){(.*?)}", re.UNICODE)
     matches = figs_pattern.findall(tex)
     figs = {}
     for i, match in enumerate(matches):
@@ -133,27 +131,20 @@ def discover_figures(tex, ext_priority):
         sizes = []
         for ext in exts:
             p = os.path.join(_dir, ".".join((basename, ext)))
-            sizes.append(os.path.getsize(p) / 10. ** 6.)
+            if os.path.exists(p):
+                sizes.append(os.path.getsize(p) / 10. ** 6.)
+            else:
+                sizes.append(0.0)
         figs[basename] = {"path": path,
                           "exts": exts,
                           "size_mb": sizes,
                           "options": opts,
-                          "env": ur"\\includegraphics",
+                          "env": r"\\includegraphics",
                           "num": i + 1}
     return figs
 
 
-def _find_exts(fig_path, ext_priority):
-    """Return a tuple of all formats for which a figure exists."""
-    basepath = os.path.splitext(fig_path)[0]
-    has_exts = []
-    for ext in ext_priority:
-        p = ".".join((basepath, ext))
-        if os.path.exists(p):
-            has_exts.append(ext)
-            # print "exists", p
-    print fig_path, has_exts
-    return tuple(has_exts)
+
 
 
 def install_figs(tex, figs, install_dir, naming=None,
@@ -178,41 +169,48 @@ def install_figs(tex, figs, install_dir, naming=None,
         Maximum size for a figure before converting it into a JPEG.
         If ``None``, no conversions are attempted.
     """
-    for figname, fig in figs.iteritems():
+    for figname, fig in figs.items():
         if len(fig['exts']) == 0:
             continue
         # get the priority graphics file type
+        full_path = None
         for ext in format_priority:
             if ext in fig['exts']:
                 figsize = fig['size_mb'][fig['exts'].index(ext)]
                 full_path = ".".join((os.path.splitext(fig['path'])[0], ext))
                 break
+        if full_path is None:
+            continue
+
         # copy fig to the build directory
         if naming == "aastex":
             install_path = os.path.join(
                 install_dir,
-                u"f{0:d}.{1}".format(fig['num'], ext))
+                f"f{fig['num']:d}.{ext}")
         elif naming == "arxiv":
             install_path = os.path.join(
                 install_dir,
-                u"figure{0:d}.{1}".format(fig['num'], ext))
+                f"figure{fig['num']:d}.{ext}")
         else:
             install_path = os.path.join(
                 install_dir,
                 os.path.basename(full_path))
         figs[figname]["installed_path"] = install_path
-        shutil.copy(full_path, install_path)
+        try:
+            shutil.copy(full_path, install_path)
+        except FileNotFoundError:
+            continue
         if max_size and figsize > max_size:
             rasterize_figure(install_path)
         # update tex by replacing old filename with new.
         # Note that fig['env'] currently has escaped slash for re; this is
         # removed here. Might want to think of a convention so it's less kludgy
-        old_fig_cmd = ur"{env}{opts}{{{path}}}".format(
-            env=fig['env'].replace(u"\\\\", u"\\"),
+        old_fig_cmd = r"{env}{opts}{{{path}}}".format(
+            env=fig['env'].replace("\\\\", "\\"),
             opts=fig['options'],
             path=fig['path'])
-        new_fig_cmd = ur"{env}{opts}{{{path}}}".format(
-            env=fig['env'].replace(u"\\\\", u"\\"),
+        new_fig_cmd = r"{env}{opts}{{{path}}}".format(
+            env=fig['env'].replace("\\\\", "\\"),
             opts=fig['options'],
             path=os.path.basename(os.path.splitext(install_path)[0]))
         tex = tex.replace(old_fig_cmd, new_fig_cmd)

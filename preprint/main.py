@@ -20,6 +20,7 @@ class PreprintApp(App):
             description='Tools for writing latex papers',
             version=VERSION,
             command_manager=CommandManager('preprint.commands'))
+        self.log.debug('Commands loaded: %s', sorted(self.command_manager))
 
     def initialize_app(self, argv):
         self.log.debug('initialize_app')

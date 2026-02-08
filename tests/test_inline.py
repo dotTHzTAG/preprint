@@ -4,7 +4,7 @@
 Tests for regular expression detection of ``\inline{*}`` commands.
 """
 
-from preprint.textools import inline
+from preprint.texutils import inline
 
 
 def _mock_sub_line(match):

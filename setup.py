@@ -8,22 +8,6 @@ from setuptools import setup, find_packages, Command
 # you can also import from setuptools
 
 
-class PyTest(Command):
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        import sys
-        import subprocess
-        errno = subprocess.call([sys.executable, 'runtests.py'])
-        raise SystemExit(errno)
-
-
 def rel_path(path):
     return os.path.join(os.path.dirname(__file__), path)
 
@@ -58,8 +42,8 @@ setup(
 
     classifiers=['Development Status :: 3 - Alpha',
                  'Programming Language :: Python',
-                 'Programming Language :: Python :: 2',
-                 'Programming Language :: Python :: 2.7',
+                 'Programming Language :: Python :: 3',
+                 'Programming Language :: Python :: 3.10',
                  'Environment :: Console',
                  ],
 
@@ -72,13 +56,13 @@ setup(
                       'watchdog',
                       'GitPython',
                       'pytest',
-                      'paperweight'],
+                      'TexSoup'],
 
     namespace_packages=[],
     packages=find_packages(),
     include_package_data=True,
 
-    cmdclass={'test': PyTest},
+
 
     entry_points={
         'console_scripts': [
