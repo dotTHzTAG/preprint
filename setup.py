@@ -28,7 +28,7 @@ except IOError:
 
 
 setup(
-    name='preprint',
+    name='preprint3',
     version=get_version(),
 
     description='Tools for writing latex papers',
