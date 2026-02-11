@@ -10,7 +10,7 @@ class Configurations(object):
 
     _DEFAULTS = {
         "master": "paper.tex",
-        "exts": ["tex", "pdf", "eps"],
+        "exts": ["tex", "pdf", "eps", "png"],
         "cmd": "latexmk -f -pdf -bibtex-cond {master}"}
 
     def __init__(self):
